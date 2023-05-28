@@ -10,6 +10,7 @@ class Permutation:
         self.fitness = None
         self.upgrade_fitness()
         self.RMSE = None
+        self.common_words = None
 
     def random_order(self): #random array of the 26 letters
         # Define the list of letters to shuffle
@@ -32,8 +33,9 @@ class Permutation:
         MSE = np.square(np.subtract(y_actual, y_get)).mean()
         RMSE = math.sqrt(MSE)
         self.RMSE = RMSE
-        new_fitness = self.cal_common_words();
-        self.fitness = new_fitness * 1000 + 100 - RMSE * 0.1
+        common_words = self.cal_common_words();
+        self.common_words = common_words
+        self.fitness = common_words * 1000 + 100 - RMSE * 0.1
     def cal_common_words(self):
         with open('dict.txt', 'r') as f:
             common_words_file = f.read()

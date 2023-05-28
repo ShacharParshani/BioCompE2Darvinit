@@ -90,7 +90,7 @@ class Logica:
                 for p in self.current_gen.generation:
                     # print(p.permutation)
                     # print("fitness: ", p.fitness)
-                    comm = p.cal_common_words()
+                    comm = p.common_words
                     # print("common w: ", comm)
                     # print("RMSE: ", p.RMSE)
                     if comm > max:
