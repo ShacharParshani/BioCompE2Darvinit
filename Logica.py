@@ -128,13 +128,14 @@ class Logica:
         for i in range(self.numMut):
             p = new_gen.generation[random_indexes[i]]
             new_gen.generation[random_indexes[i]] = self.mutation(p)
+
+        for i in range(self.n):
+            new_gen.generation[i].upgrade_fitness()
+
         # optimization
         for i in range(self.n):
             for j in range(self.N):
                 new_gen.generation[i] = self.optimization_generation(new_gen.generation[i])
-
-        for i in range(self.n):
-            new_gen.generation[i].upgrade_fitness()
 
         return new_gen
 
@@ -154,9 +155,8 @@ class Logica:
         mut_p.upgrade_fitness()
 
         if p.fitness < mut_p.fitness:
-            return mut_p
-        else:
-            return p
+            p.fitness = mut_p.fitness
+        return p
 
 # if __name__ == '__main__':
 #     p = Permutation.Permutation()
