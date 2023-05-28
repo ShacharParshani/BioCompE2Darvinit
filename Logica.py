@@ -40,13 +40,13 @@ def crossover(p1, p2):
 
 
 class Logica:
-    def __init__(self, pCrossover, pMut, k, n):
+    def __init__(self, pCrossover, pMut, N_optimization, n):
         self.numCrossover = math.ceil(pCrossover * n)  # number of crossover
         self.numRep = n - self.numCrossover  # number of replication
         self.numMut = math.ceil(pMut * n)  # number of mutation
         self.current_gen = Generation(n)
         self.current_gen.create_first_generation()
-        self.k = k
+        self.N = N_optimization
         self.n = n  # n- size of population
 
     # def run(self):
@@ -81,7 +81,6 @@ class Logica:
         while max < 0.85:
             # for i in range(self.k):
             i = 0
-            self.current_gen.create_first_generation()
             # print(i, max)
             while (i < 80 or max > 0.3) and (i < 120 or max > 0.5) and max < 0.85:
                 self.current_gen = self.new_generation()
@@ -89,17 +88,19 @@ class Logica:
                 max = 0
                 maxp = None
                 for p in self.current_gen.generation:
-                    print(p.permutation)
-                    print("fitness: ", p.fitness)
+                    # print(p.permutation)
+                    # print("fitness: ", p.fitness)
                     comm = p.cal_common_words()
-                    print("common w: ", comm)
-                    print("RMSE: ", p.RMSE)
+                    # print("common w: ", comm)
+                    # print("RMSE: ", p.RMSE)
                     if comm > max:
                         max = comm
                         maxp = p
                 print("max comm w: ", max)
                 i += 1
                 total_iteration += 1
+            self.current_gen = Generation(self.n)
+            self.current_gen.create_first_generation()
         maxp.print_not_in_dict()
         print(f"finished after {total_iteration} generation")
         self.save_solution(maxp)
@@ -127,6 +128,10 @@ class Logica:
         for i in range(self.numMut):
             p = new_gen.generation[random_indexes[i]]
             new_gen.generation[random_indexes[i]] = self.mutation(p)
+        # optimization
+        for i in range(self.n):
+            for j in range(self.N):
+                new_gen.generation[i] = self.optimization_generation(new_gen.generation[i])
 
         for i in range(self.n):
             new_gen.generation[i].upgrade_fitness()
@@ -143,6 +148,15 @@ class Logica:
         mut_p.permutation[random_2_indexes[0]] = p.permutation[random_2_indexes[1]]
         mut_p.permutation[random_2_indexes[1]] = p.permutation[random_2_indexes[0]]
         return mut_p
+
+    def optimization_generation(self, p):
+        mut_p = self.mutation(p)
+        mut_p.upgrade_fitness()
+
+        if p.fitness < mut_p.fitness:
+            return mut_p
+        else:
+            return p
 
 # if __name__ == '__main__':
 #     p = Permutation.Permutation()
