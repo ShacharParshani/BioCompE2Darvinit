@@ -53,20 +53,6 @@ class Logica:
         self.current_gen = Generation(self.n)
         self.current_gen.create_first_generation()
 
-    # def run(self):
-    #     for i in range(self.k):
-    #         self.current_gen = self.new_generation()
-    #         print('generation: ', i)
-    #         max = 0
-    #         for p in self.current_gen.generation:
-    #             print(p.permutation)
-    #             print("fitness: ", p.fitness)
-    #             comm =  p.cal_common_words()
-    #             print("common w: ", comm)
-    #             print("RMSE: ", p.RMSE)
-    #             if comm > max : max = comm
-    #             check_double_letter(p.permutation)
-    #         print("max comm w: ", max)
 
     def save_fitness(self, generation, max_fitness, average_fitness):
         with open('max_fitness.txt', 'a') as file:
@@ -102,11 +88,7 @@ class Logica:
                 max_fitness = 0
                 maxp = None
                 for p in self.current_gen.generation:
-                    # print(p.permutation)
-                    # print("fitness: ", p.fitness)
                     comm = p.common_words
-                    # print("common w: ", comm)
-                    # print("RMSE: ", p.RMSE)
                     fitness = p.fitness
                     sum += fitness
                     if comm > max:
@@ -128,7 +110,6 @@ class Logica:
                 last_fitness = max_fitness
             self.current_gen = Generation(self.n)
             self.current_gen.create_first_generation()
-        maxp.print_not_in_dict()
         print("max real words: ", max)
         print("average real words: ", sum / self.n)
         print(f"finished after {total_iteration} generation")
